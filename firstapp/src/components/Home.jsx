@@ -1,16 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 export default function Home() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const role=localStorage.getItem("role")
+  const navigate=useNavigate()
   useEffect(() => {
     fetchProducts()
   }, [])
-  function addToCart(id){
-    console.log(id,role)
+
+  function addToCart(productId){
+    console.log(productId,role)
+    const userId=localStorage.getItem("userId")
+    if(!userId){
+      Swal.fire({
+        title: "Not Logged In",
+        text: "Please log in to add products to your cart.",
+        icon: "warning"
+      });
+      return false
+    }
+    axios.post("http://localhost:4000/api/cart/add",
+      {productId, quantity:1}, 
+      {params:{userId}
+    })
+      .then(res=>{
+        if(res.status==200){
+          Swal.fire({
+            title: "Product Added to Cart!",
+            text: "The product has been added to your cart.",
+            icon: "success"
+          });
+
+          navigate("/cart")
+        }
+        else{
+          Swal.fire({
+            title: "Failed to Add Product!",
+            text: res.data.message,
+            icon: "error"
+          });
+        }
+      })
+      .catch(err=>{
+        console.log("error from add cart logic ",err)
+      })
   }
+
   async function fetchProducts() {
     axios.get("http://localhost:4000/api/product")
       .then((res) => {
