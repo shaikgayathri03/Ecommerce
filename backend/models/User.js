@@ -1,4 +1,4 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose")
 const User=mongoose.Schema({
     name:{
         type:String
@@ -17,4 +17,5 @@ const User=mongoose.Schema({
         type:String
     }
 })
+
 module.exports=mongoose.model("User",User)

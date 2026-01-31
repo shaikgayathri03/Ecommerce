@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const Product=mongoose.Schema({
+
+const Product= mongoose.Schema({
     name:{
         type:String
     },
@@ -16,7 +17,8 @@ const Product=mongoose.Schema({
         type:Number
     },
     createdAt:{
-        type:Date,
-    }
-}) 
+        type:Date
+    },
+})
+
 module.exports=mongoose.model("Product",Product)
